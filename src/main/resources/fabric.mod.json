@@ -11,6 +11,11 @@
     "sources": "https://github.com/CottonMC/MetaTips"
   },
   "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.cottonmc.metatips.MetaTips"
+    ]
+  },
   "mixins": [
     "metatips.common.json"
   ],

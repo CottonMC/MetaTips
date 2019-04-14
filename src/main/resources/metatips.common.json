@@ -4,6 +4,7 @@
   "refmap": "mixins.metatips.refmap.json",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinItemTooltip"
+    "MixinItemTooltip",
+    "MixinItemChat"
   ]
 }

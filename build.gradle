@@ -23,7 +23,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "metatips"
-version = "1.0.0+1.14pre2"
+version = "1.1.0+1.14pre2"
 
 minecraft {
 	refmapName = 'mixins.metatips.refmap.json'
@@ -37,6 +37,8 @@ dependencies {
 	minecraft "com.mojang:minecraft:1.14 Pre-Release 2"
 	mappings "net.fabricmc:yarn:1.14 Pre-Release 2+build.1"
 	modCompile "net.fabricmc:fabric-loader:0.4.1+build.123"
+	modCompile "net.fabricmc:fabric:0.2.7+build.122"
+	include "net.fabricmc:fabric:0.2.7+build.122"
 }
 
 processResources {

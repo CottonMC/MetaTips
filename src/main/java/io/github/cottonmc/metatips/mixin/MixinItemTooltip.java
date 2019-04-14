@@ -35,8 +35,12 @@ public class MixinItemTooltip {
 		if (FabricLoader.getInstance().getModContainer(id.getNamespace()).isPresent()) {
 			ModContainer mod = FabricLoader.getInstance().getModContainer(id.getNamespace()).get();
 			tooltips.add(new StringTextComponent(mod.getMetadata().getName()).applyFormat(TextFormat.BLUE));
-		} else {
+		} else if (id.getNamespace().equals("minecraft")) {
 			tooltips.add(new StringTextComponent("Minecraft").applyFormat(TextFormat.BLUE));
+		} else if (id.getNamespace().equals("c")) {
+			tooltips.add(new TranslatableTextComponent("tooltip.metatips.common").applyFormat(TextFormat.BLUE, TextFormat.ITALIC));
+		} else {
+			tooltips.add(new TranslatableTextComponent("tooltip.metatips.unknown").applyFormat(TextFormat.BLUE, TextFormat.ITALIC));
 		}
 	}
 
@@ -73,28 +77,28 @@ public class MixinItemTooltip {
 							default:
 								break;
 						}
-						tooltip += new TranslatableTextComponent("msg.metatips.nbt_collection_size", items).getText();
+						tooltip += new TranslatableTextComponent("tooltip.metatips.nbt_collection_size", items).getText();
 					}
 					tooltip += ")";
 					tooltips.add(new StringTextComponent(tooltip).applyFormat(TextFormat.DARK_GRAY));
 				}
 			} else {
 				if (MinecraftClient.IS_SYSTEM_MAC) {
-					tooltips.add(new TranslatableTextComponent("msg.metatips.nbt_tags_mac", tag.getKeys().size()).applyFormat(TextFormat.DARK_GRAY));
+					tooltips.add(new TranslatableTextComponent("tooltip.metatips.nbt_tags_mac", tag.getKeys().size()).applyFormat(TextFormat.DARK_GRAY));
 				} else {
-					tooltips.add(new TranslatableTextComponent("msg.metatips.nbt_tags", tag.getKeys().size()).applyFormat(TextFormat.DARK_GRAY));
+					tooltips.add(new TranslatableTextComponent("tooltip.metatips.nbt_tags", tag.getKeys().size()).applyFormat(TextFormat.DARK_GRAY));
 				}
 			}
 		}
 		Collection<Identifier> tags = ItemTags.getContainer().getTagsFor(((ItemStack) (Object) this).getItem());
 		if (!tags.isEmpty()) {
 			if (Screen.hasAltDown()) {
-				tooltips.add(new TranslatableTextComponent("msg.metatips.tags_header", tags.size()).applyFormat(TextFormat.DARK_GRAY));
+				tooltips.add(new TranslatableTextComponent("tooltip.metatips.tags_header", tags.size()).applyFormat(TextFormat.DARK_GRAY));
 				for (Identifier id : tags) {
 					tooltips.add(new StringTextComponent("  #" + id.toString()).applyFormat(TextFormat.DARK_GRAY));
 				}
 			} else {
-				tooltips.add(new TranslatableTextComponent("msg.metatips.data_tags", tags.size()).applyFormat(TextFormat.DARK_GRAY));
+				tooltips.add(new TranslatableTextComponent("tooltip.metatips.data_tags", tags.size()).applyFormat(TextFormat.DARK_GRAY));
 			}
 		}
 		cir.setReturnValue(tooltips);
