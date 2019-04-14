@@ -3,7 +3,7 @@
   "package": "io.github.cottonmc.metatips.mixin",
   "refmap": "mixins.metatips.refmap.json",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
+  "client": [
     "MixinItemTooltip",
     "MixinItemChat"
   ]
