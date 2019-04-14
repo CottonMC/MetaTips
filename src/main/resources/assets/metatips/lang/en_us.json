@@ -1,0 +1,7 @@
+{
+  "msg.metatips.data_tags": "Data: %s item tag(s) (ALT)",
+  "msg.metatips.tags_header": "Data: %s item tag(s)",
+  "msg.metatips.nbt_tags": "NBT: %s tag(s) (CTRL)",
+  "msg.metatips.nbt_tags_mac": "NBT: %s tag(s) (CMND)",
+  "msg.metatips.nbt_collection_size": "%s elements"
+}

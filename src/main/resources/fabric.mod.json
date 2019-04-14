@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "metatips",
+  "version": "$version",
+
+  "name": "MetaTips",
+  "icon": "assets/metatips/icon.png",
+  "description": "See what's up with your items!",
+  "licence": "MIT",
+  "contact": {
+    "sources": "https://github.com/CottonMC/MetaTips"
+  },
+  "environment": "*",
+  "mixins": [
+    "metatips.common.json"
+  ],
+  "requires": {
+    "fabricloader": ">=0.4.0"
+  }
+}
