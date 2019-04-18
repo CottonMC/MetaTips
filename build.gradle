@@ -23,7 +23,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "metatips"
-version = "1.1.1+1.14pre2"
+version = "1.1.2+1.14pre2"
 
 minecraft {
 	refmapName = 'mixins.metatips.refmap.json'
