@@ -31,7 +31,7 @@ public class MixinItemTooltip {
 
 	@Inject(method = "getTooltipText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/item/TooltipContext;isAdvanced()Z", ordinal = 2), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
 	public void injectModName(PlayerEntity player, TooltipContext ctx, CallbackInfoReturnable cir, List<TextComponent> tooltips) {
-		if (FabricLoader.getInstance().isModLoaded("waila")) return;
+		if (FabricLoader.getInstance().isModLoaded("waila") && ctx.isAdvanced()) return;
 		Identifier id = Registry.ITEM.getId(((ItemStack)(Object)this).getItem());
 		if (FabricLoader.getInstance().getModContainer(id.getNamespace()).isPresent()) {
 			ModContainer mod = FabricLoader.getInstance().getModContainer(id.getNamespace()).get();

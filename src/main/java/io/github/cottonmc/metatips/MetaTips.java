@@ -36,6 +36,6 @@ public class MetaTips implements ModInitializer {
 	public static void chatItem(ItemStack stack) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeItemStack(stack);
-		MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadC2SPacket(ITEM_CHAT, buf));
+		MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(ITEM_CHAT, buf));
 	}
 }
