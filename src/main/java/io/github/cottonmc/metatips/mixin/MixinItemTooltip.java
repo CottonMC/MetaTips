@@ -3,7 +3,7 @@ package io.github.cottonmc.metatips.mixin;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -11,10 +11,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.tag.ItemTags;
-import net.minecraft.text.StringTextComponent;
-import net.minecraft.text.TextComponent;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,28 +29,27 @@ import java.util.List;
 @Mixin(ItemStack.class)
 public class MixinItemTooltip {
 
-	@Inject(method = "getTooltipText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/item/TooltipContext;isAdvanced()Z", ordinal = 2), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-	public void injectModName(PlayerEntity player, TooltipContext ctx, CallbackInfoReturnable cir, List<TextComponent> tooltips) {
-		if (FabricLoader.getInstance().isModLoaded("waila") && !ctx.isAdvanced()) return;
+	@Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/item/TooltipContext;isAdvanced()Z", ordinal = 2), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+	public void injectModName(PlayerEntity player, TooltipContext ctx, CallbackInfoReturnable cir, List<Text> tooltips) {
 		Identifier id = Registry.ITEM.getId(((ItemStack)(Object)this).getItem());
 		if (FabricLoader.getInstance().getModContainer(id.getNamespace()).isPresent()) {
 			ModContainer mod = FabricLoader.getInstance().getModContainer(id.getNamespace()).get();
-			tooltips.add(new StringTextComponent(mod.getMetadata().getName()).applyFormat(TextFormat.BLUE));
+			tooltips.add(new LiteralText(mod.getMetadata().getName()).formatted(Formatting.BLUE));
 		} else if (id.getNamespace().equals("minecraft")) {
-			tooltips.add(new StringTextComponent("Minecraft").applyFormat(TextFormat.BLUE));
+			tooltips.add(new LiteralText("Minecraft").formatted(Formatting.BLUE));
 		} else if (id.getNamespace().equals("c")) {
-			tooltips.add(new TranslatableTextComponent("tooltip.metatips.common").applyFormat(TextFormat.BLUE, TextFormat.ITALIC));
+			tooltips.add(new TranslatableText("tooltip.metatips.common").formatted(Formatting.BLUE, Formatting.ITALIC));
 		} else {
-			tooltips.add(new TranslatableTextComponent("tooltip.metatips.unknown").applyFormat(TextFormat.BLUE, TextFormat.ITALIC));
+			tooltips.add(new TranslatableText("tooltip.metatips.unknown").formatted(Formatting.BLUE, Formatting.ITALIC));
 		}
 	}
 
-	@Inject(method = "getTooltipText", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;hasTag()Z", ordinal = 5), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
-	public void appendStackInfo(PlayerEntity player, TooltipContext ctx, CallbackInfoReturnable cir, List<TextComponent> tooltips) {
+	@Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;hasTag()Z", ordinal = 5), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
+	public void appendStackInfo(PlayerEntity player, TooltipContext ctx, CallbackInfoReturnable cir, List<Text> tooltips) {
 		if (((ItemStack)(Object)this).hasTag()) {
 			CompoundTag tag = ((ItemStack)(Object)this).getTag();
 			if (Screen.hasControlDown()) {
-				tooltips.add((new TranslatableTextComponent("item.nbt_tags", tag.getKeys().size())).applyFormat(TextFormat.DARK_GRAY));
+				tooltips.add((new TranslatableText("item.nbt_tags", tag.getKeys().size())).formatted(Formatting.DARK_GRAY));
 				for (String key : tag.getKeys()) {
 					int type = tag.getType(key);
 					String tooltip = "  \"" + key + "\" (" + Tag.idToString(tag.getType(key)).substring(4).replace('_', ' ') + ", ";
@@ -78,28 +77,28 @@ public class MixinItemTooltip {
 							default:
 								break;
 						}
-						tooltip += new TranslatableTextComponent("tooltip.metatips.nbt_collection_size", items).getText();
+						tooltip += new TranslatableText("tooltip.metatips.nbt_collection_size", items).asString();
 					}
 					tooltip += ")";
-					tooltips.add(new StringTextComponent(tooltip).applyFormat(TextFormat.DARK_GRAY));
+					tooltips.add(new LiteralText(tooltip).formatted(Formatting.DARK_GRAY));
 				}
 			} else {
 				if (MinecraftClient.IS_SYSTEM_MAC) {
-					tooltips.add(new TranslatableTextComponent("tooltip.metatips.nbt_tags_mac", tag.getKeys().size()).applyFormat(TextFormat.DARK_GRAY));
+					tooltips.add(new TranslatableText("tooltip.metatips.nbt_tags_mac", tag.getKeys().size()).formatted(Formatting.DARK_GRAY));
 				} else {
-					tooltips.add(new TranslatableTextComponent("tooltip.metatips.nbt_tags", tag.getKeys().size()).applyFormat(TextFormat.DARK_GRAY));
+					tooltips.add(new TranslatableText("tooltip.metatips.nbt_tags", tag.getKeys().size()).formatted(Formatting.DARK_GRAY));
 				}
 			}
 		}
 		Collection<Identifier> tags = ItemTags.getContainer().getTagsFor(((ItemStack) (Object) this).getItem());
 		if (!tags.isEmpty()) {
 			if (Screen.hasAltDown()) {
-				tooltips.add(new TranslatableTextComponent("tooltip.metatips.tags_header", tags.size()).applyFormat(TextFormat.DARK_GRAY));
+				tooltips.add(new TranslatableText("tooltip.metatips.tags_header", tags.size()).formatted(Formatting.DARK_GRAY));
 				for (Identifier id : tags) {
-					tooltips.add(new StringTextComponent("  #" + id.toString()).applyFormat(TextFormat.DARK_GRAY));
+					tooltips.add(new LiteralText("  #" + id.toString()).formatted(Formatting.DARK_GRAY));
 				}
 			} else {
-				tooltips.add(new TranslatableTextComponent("tooltip.metatips.data_tags", tags.size()).applyFormat(TextFormat.DARK_GRAY));
+				tooltips.add(new TranslatableText("tooltip.metatips.data_tags", tags.size()).formatted(Formatting.DARK_GRAY));
 			}
 		}
 		cir.setReturnValue(tooltips);
