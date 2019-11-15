@@ -52,7 +52,7 @@ public class MixinItemTooltip {
 				tooltips.add((new TranslatableText("item.nbt_tags", tag.getKeys().size())).formatted(Formatting.DARK_GRAY));
 				for (String key : tag.getKeys()) {
 					int type = tag.getType(key);
-					String tooltip = "  \"" + key + "\" (" + Tag.idToString(tag.getType(key)).substring(4).replace('_', ' ') + ", ";
+					String tooltip = "  \"" + key + "\" (" + getTagName(type) + ", ";
 					// only display raw values for non-collection tags
 					if (type != 7 && type < 9) {
 						tooltip += tag.getTag(key).asString();
@@ -115,6 +115,41 @@ public class MixinItemTooltip {
 		}
 
 		return new ListTag();
+	}
+
+	private static String getTagName(int id) {
+		switch(id) {
+			case 0:
+				return "End";
+			case 1:
+				return "Byte";
+			case 2:
+				return "Short";
+			case 3:
+				return "Int";
+			case 4:
+				return "Long";
+			case 5:
+				return "Float";
+			case 6:
+				return "Double";
+			case 7:
+				return "Byte Array";
+			case 8:
+				return "String";
+			case 9:
+				return "List";
+			case 10:
+				return "Compound";
+			case 11:
+				return "Int Array";
+			case 12:
+				return "Long Array";
+			case 99:
+				return "Any Numeric Tag";
+			default:
+				return "UNKNOWN";
+		}
 	}
 
 }
